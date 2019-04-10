@@ -1,11 +1,14 @@
 // your logic here
 const game= {
     Level:0,
-    score:0
+    score:0,
+    preSelected:null,
+    machingTime:false
 }
          //****/part1:page layout****
 //click the new game button to change main div to game level 1
 document.getElementsByClassName("game-stats__button")[0].addEventListener("click", displayGame);
+
 //display card layout for level#
 function displayGame () {
     let level= game.Level;
@@ -33,8 +36,10 @@ function changeLayout() {
             c[j].innerHTML='<div class="card__face card__face--front"></div><div class="card__face card__face--back"></div>';
             par[0].appendChild(c[j]);        
             c[j].className=cardsClass[j%cardsClass.length];
+            c[j].addEventListener("click",handleCard) //add flipped effection
         }
     }
+
 } 
 
 //cards pool generated
@@ -58,4 +63,41 @@ function cardsSelect() {
     }
      return  cardsPool;
 }
-//****/part2:match img****
+
+
+//****/part2:match card****
+
+function handleCard() {    
+    if (game.machingTime) {return}
+    this.classList.add("card--flipped")
+    const currentSelected=this;
+    //  check if the same card
+    if (currentSelected===game.preSelected) {
+        currentSelected.classList.remove('card--flipped');
+        game.preSelected=null;
+        return;
+    } 
+    // match cards
+    if (game.preSelected) {
+       if (game.preSelected.className===currentSelected.className) {
+           unHandleCard(game.preSelected);
+           unHandleCard(currentSelected);
+           game.preSelected=null;
+           return;
+        }
+        // wrong cards
+        game.machingTime=true;
+        setTimeout(() => {
+            currentSelected.classList.remove('card--flipped');
+            game.preSelected.classList.remove('card--flipped');
+            game.preSelected=null;
+            game.machingTime=false;
+        }, 1000);
+        return;
+    }
+    game.preSelected=currentSelected;
+    }
+    //remove "click"event from card
+function unHandleCard(card) {
+    card.removeEventListener("click",handleCard)
+}
