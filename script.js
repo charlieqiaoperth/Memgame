@@ -6,7 +6,7 @@ const game= {
     preSelected:null,
     machingTime:false,
     start:false,
-    timeLeft:60,
+    timeLeft:10,
     matched:0
 }
 
@@ -22,7 +22,7 @@ function displayGame () {
         alert(`Congratulation your score is ${game.score}`);
         let cards=document.getElementsByClassName("card");        
         for (let a=0;a<cards.length;a++) {cards[a].removeEventListener("click",handleCard)};        
-        game.level=0;        
+        game.level=0;             
         game.start=false;             
         return;
     }    else {
@@ -31,8 +31,10 @@ function displayGame () {
         game.start=true;
         game.level=1;
         game.matched=0;
-        game.score=0;               
-        changeLayout(game.level);                   
+        game.score=0; 
+        game.timeLeft=60;                     
+        changeLayout(game.level);
+        timeControl();                   
        }
         return;   
 }
@@ -41,6 +43,8 @@ function changeLayout(change) {
     let par=document.getElementsByClassName("game-board");  
     const c=[]; 
     let cardLayout;  
+    game.timeLeft=60; 
+    document.getElementsByClassName("game-timer__bar")[0].innerHTML=`${game.timeLeft}S`;
     while (par[0].firstChild) {
         par[0].removeChild(par[0].firstChild);//clear old card ,ready to new card layout
         }
@@ -61,8 +65,7 @@ function changeLayout(change) {
             par[0].appendChild(c[j]);        
             c[j].className=cardsClass[j%cardsClass.length];
             c[j].addEventListener("click",handleCard) //add flipped effection
-            }
-            timeControl();
+            }            
         };break;
         case 2:            
         { 
@@ -187,19 +190,23 @@ function unHandleCard(card) {
 //time control
 function timeControl() {
     // game.timeLeft=60;
-    if (game.timeLeft>0) {
-        setTimeout(() => {
-            game.timeLeft-=1;
-            document.getElementsByClassName("game-timer__bar")[0].innerHTML=`${game.timeLeft}S`
-        }, 1000);
-    } else {
+    if (game.timeLeft===0) {
         document.getElementsByClassName("game-stats__button")[0].innerHTML="New Game";
         alert(`Congratulation your score is ${game.score}`);
         let cards=document.getElementsByClassName("card");        
         for (let a=0;a<cards.length;a++) {cards[a].removeEventListener("click",handleCard)}; 
-        game.level=0; 
-        game.timeLeft=60;       
+        game.level=0;         
         game.start=false; 
-    }
+        return;
+    } else {
+        if (game.start) {
+        setTimeout(() => {
+            game.timeLeft--;            
+            document.getElementsByClassName("game-timer__bar")[0].innerHTML=`${game.timeLeft}S`;            
+            document.getElementsByClassName("game-timer__bar")[0].style.width="game.left+'%'";
+            timeControl()
+            }, 1000);
+        }
+    } 
 }
 
