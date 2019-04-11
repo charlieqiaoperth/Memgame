@@ -25,9 +25,9 @@ function displayGame () {
          //star game
         document.getElementsByClassName("game-stats__button")[0].innerHTML="End Game";
         game.start=true;
-        game.level=1;
+        game.level=3;
         //change card layout to level--1        
-        changeLayout();                   
+        changeLayout(game.level);                   
        }
         return;   
 }
@@ -45,26 +45,54 @@ function changeLayout(change) {
     //     chl.parentNode.removeChild(chl);
     //     }
     
-    let par=document.getElementsByClassName("game-board");        
+    let par=document.getElementsByClassName("game-board");  
+    const c=[]; 
+    let cardLayout;
+    // if (change=1) {cardLayout=2*2/2} else if (change=2) {cardNum=4*4/2} else (change=6*6/2);      
+    // if (gameLevel=1) {cardLayout=2*2/2} else if (gameLevel=2) {cardNum=4*4/2} else (cardNum=6*6/2);      
         while (par[0].firstChild) {
         par[0].removeChild(par[0].firstChild);
         }
         //change for different level
     switch (change) {
-        //add card for level        
-     if (game.level===1) {
-        // let par=document.getElementsByClassName("game-board")         
-        par[0].style= "grid-template-columns:auto auto";
-        const c=[];  
+              
+        case 1:            
+        { par[0].style= "grid-template-columns:auto auto";         
         cardsClass=cardsSelect(game.level);   
-        for (let j=0;j<4;j++) {
+        cardLayout=2*2;
+        for (let j=0;j<cardLayout;j++) {
             c[j]=document.createElement("div");
             c[j].innerHTML='<div class="card__face card__face--front"></div><div class="card__face card__face--back"></div>';
             par[0].appendChild(c[j]);        
             c[j].className=cardsClass[j%cardsClass.length];
             c[j].addEventListener("click",handleCard) //add flipped effection
         }
-    }
+        };break;
+        case 2:            
+        { par[0].style= "grid-template-columns:auto auto auto auto";         
+        cardsClass=cardsSelect(game.level);   
+        cardLayout=4*4;
+        for (let j=0;j<cardLayout;j++) {
+            c[j]=document.createElement("div");
+            c[j].innerHTML='<div class="card__face card__face--front"></div><div class="card__face card__face--back"></div>';
+            par[0].appendChild(c[j]);        
+            c[j].className=cardsClass[j%cardsClass.length];
+            c[j].addEventListener("click",handleCard) //add flipped effection
+        }
+        };break;
+        case 3:            
+        { par[0].style= "grid-template-columns:auto auto auto auto auto auto";         
+        cardsClass=cardsSelect(game.level);   
+        cardLayout=6*6;
+        for (let j=0;j<cardLayout;j++) {
+            c[j]=document.createElement("div");
+            c[j].innerHTML='<div class="card__face card__face--front"></div><div class="card__face card__face--back"></div>';
+            par[0].appendChild(c[j]);        
+            c[j].className=cardsClass[j%cardsClass.length];
+            c[j].addEventListener("click",handleCard) //add flipped effection
+        }
+        };break;
+    
     }
 } 
 //点击end后保持状态，并且积分
@@ -88,7 +116,7 @@ function cardsSelect(gameLevel) {
     let cardClass = "";
     let cardsPool=[];
     let cardNum;
-    if (gameLevel=1) {cardNum=2*2/2} else if (gameLevel=2) {cardNum=4*4/2} else (cardNum=6*6/2);
+    if (gameLevel===1) {cardNum=2} else if (gameLevel===2) {cardNum=8} else (cardNum=18);
     for (let i=0;i<cardNum;i++) {
     switch (Math.floor(Math.random() *10)) {
         case 0:cardClass="card html5";break;
