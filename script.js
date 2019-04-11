@@ -1,36 +1,62 @@
 // your logic here
 const game= {
-    Level:0,
+    haha:null,
+    level:0,
     score:0,
     preSelected:null,
-    machingTime:false
+    machingTime:false,
+    start:false
 }
+
          //****/part1:page layout****
 //click the new game button to change main div to game level 1
 document.getElementsByClassName("game-stats__button")[0].addEventListener("click", displayGame);
 
 //display card layout for level#
 function displayGame () {
-    let level= game.Level;
-    if (level===0) {
+     //end game???????
+     if (game.start) {        
+        document.getElementsByClassName("game-stats__button")[0].innerHTML="New Game";
+        // countScore();
+        alert(game.score);
+        game.start=false;        
+        return;
+    }    else {
+         //star game
         document.getElementsByClassName("game-stats__button")[0].innerHTML="End Game";
-        //change card layout to level--1
+        game.start=true;
         game.level=1;
-        changeLayout();
-        // cardsSelect();//测试新函数
-        // alert(cardsSelect());//验证用
-        }
+        //change card layout to level--1        
+        changeLayout();                   
+       }
+        return;   
 }
-function changeLayout() {
-    //remove instruction
-    let par=document.getElementsByClassName("game-board");
-    let chl=document.getElementsByClassName("game-instruction");
-    par[0].removeChild(chl[0]);    
-        //add card for level
-    if (game.level===1) {
+//change layout belong to level#
+function changeLayout(change) {
+    //remove all childnode from class "game-board"
+    // let par=document.getElementsByClassName("game-board");
+    // let chl=document.getElementsByClassName("card");
+    //     chl.forEach(card => { function() {
+    //         par[0].removeChild(card)}
+    //     });
+
+    // let chl=document.getElementsByClassName("card");
+    // if (chl.parentNode) {
+    //     chl.parentNode.removeChild(chl);
+    //     }
+    
+    let par=document.getElementsByClassName("game-board");        
+        while (par[0].firstChild) {
+        par[0].removeChild(par[0].firstChild);
+        }
+        //change for different level
+    switch (change) {
+        //add card for level        
+     if (game.level===1) {
+        // let par=document.getElementsByClassName("game-board")         
         par[0].style= "grid-template-columns:auto auto";
         const c=[];  
-        cardsClass=cardsSelect();   
+        cardsClass=cardsSelect(game.level);   
         for (let j=0;j<4;j++) {
             c[j]=document.createElement("div");
             c[j].innerHTML='<div class="card__face card__face--front"></div><div class="card__face card__face--back"></div>';
@@ -39,14 +65,31 @@ function changeLayout() {
             c[j].addEventListener("click",handleCard) //add flipped effection
         }
     }
-
+    }
 } 
+//点击end后保持状态，并且积分
+function CountScore() {
+    //remove instruction
+    // let par=document.getElementsByClassName("game-board");
+    // let chl=document.getElementsByClassName("game-instruction");
+    // par[0].removeChild(chl[0]);    
+    let cardsAll=document.getElementsByClassName("card");
+        // cardsAll.forEach(c => {c.classList.remove("card--flipped")})
+        for (let i=0;i<cardsAll.length;i++) {
+            unHandleCard(cardcardsAll[i])
+        }
+        return;
+        // cardsAll.forEach(c => {unHandleCard(c)});
+}
+
 
 //cards pool generated
-function cardsSelect() {
+function cardsSelect(gameLevel) {
     let cardClass = "";
     let cardsPool=[];
-    for (let i=0;i<2;i++) {
+    let cardNum;
+    if (gameLevel=1) {cardNum=2*2/2} else if (gameLevel=2) {cardNum=4*4/2} else (cardNum=6*6/2);
+    for (let i=0;i<cardNum;i++) {
     switch (Math.floor(Math.random() *10)) {
         case 0:cardClass="card html5";break;
         case 1:cardClass="card css3";break;
