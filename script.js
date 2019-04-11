@@ -5,7 +5,9 @@ const game= {
     score:0,
     preSelected:null,
     machingTime:false,
-    start:false
+    start:false,
+    timeLeft:60,
+    matched:0
 }
 
          //****/part1:page layout****
@@ -14,101 +16,93 @@ document.getElementsByClassName("game-stats__button")[0].addEventListener("click
 
 //display card layout for level#
 function displayGame () {
-     //end game???????
+     //stop game
      if (game.start) {        
         document.getElementsByClassName("game-stats__button")[0].innerHTML="New Game";
-        // countScore();
-        alert(game.score);
-        game.start=false;        
+        alert(`Congratulation your score is ${game.score}`);
+        let cards=document.getElementsByClassName("card");        
+        for (let a=0;a<cards.length;a++) {cards[a].removeEventListener("click",handleCard)};        
+        game.level=0;        
+        game.start=false;             
         return;
     }    else {
          //star game
         document.getElementsByClassName("game-stats__button")[0].innerHTML="End Game";
         game.start=true;
-        game.level=3;
-        //change card layout to level--1        
+        game.level=1;
+        game.matched=0;
+        game.score=0;               
         changeLayout(game.level);                   
        }
         return;   
 }
 //change layout belong to level#
-function changeLayout(change) {
-    //remove all childnode from class "game-board"
-    // let par=document.getElementsByClassName("game-board");
-    // let chl=document.getElementsByClassName("card");
-    //     chl.forEach(card => { function() {
-    //         par[0].removeChild(card)}
-    //     });
-
-    // let chl=document.getElementsByClassName("card");
-    // if (chl.parentNode) {
-    //     chl.parentNode.removeChild(chl);
-    //     }
-    
+function changeLayout(change) {    
     let par=document.getElementsByClassName("game-board");  
     const c=[]; 
-    let cardLayout;
-    // if (change=1) {cardLayout=2*2/2} else if (change=2) {cardNum=4*4/2} else (change=6*6/2);      
-    // if (gameLevel=1) {cardLayout=2*2/2} else if (gameLevel=2) {cardNum=4*4/2} else (cardNum=6*6/2);      
-        while (par[0].firstChild) {
-        par[0].removeChild(par[0].firstChild);
+    let cardLayout;  
+    while (par[0].firstChild) {
+        par[0].removeChild(par[0].firstChild);//clear old card ,ready to new card layout
         }
         //change for different level
     switch (change) {
-              
+        // case 0: {par[0].style="background-color:rgba(0,0,255)";par[0].style="z-index:1";};break;     
+        // case 0:{alert (document.getElementsByClassName("card"))};break;//.forEach(c => {unHandleCard(c)});};break;
         case 1:            
-        { par[0].style= "grid-template-columns:auto auto";         
-        cardsClass=cardsSelect(game.level);   
-        cardLayout=2*2;
-        for (let j=0;j<cardLayout;j++) {
+        { 
+            // while (par[0].firstChild) {par[0].removeChild(par[0].firstChild);};
+            document.getElementsByClassName("game-stats__level--value")[0].innerHTML=game.level;
+            par[0].style= "grid-template-columns:auto auto";         
+            cardsClass=cardsSelect(game.level);   
+            cardLayout=2*2;
+            for (let j=0;j<cardLayout;j++) {
             c[j]=document.createElement("div");
             c[j].innerHTML='<div class="card__face card__face--front"></div><div class="card__face card__face--back"></div>';
             par[0].appendChild(c[j]);        
             c[j].className=cardsClass[j%cardsClass.length];
             c[j].addEventListener("click",handleCard) //add flipped effection
-        }
+            }
+            timeControl();
         };break;
         case 2:            
-        { par[0].style= "grid-template-columns:auto auto auto auto";         
-        cardsClass=cardsSelect(game.level);   
-        cardLayout=4*4;
-        for (let j=0;j<cardLayout;j++) {
+        { 
+            document.getElementsByClassName("game-stats__level--value")[0].innerHTML=game.level;
+            par[0].style= "grid-template-columns:auto auto auto auto";         
+            cardsClass=cardsSelect(game.level);   
+            cardLayout=4*4;
+            for (let j=0;j<cardLayout;j++) {
             c[j]=document.createElement("div");
             c[j].innerHTML='<div class="card__face card__face--front"></div><div class="card__face card__face--back"></div>';
             par[0].appendChild(c[j]);        
             c[j].className=cardsClass[j%cardsClass.length];
             c[j].addEventListener("click",handleCard) //add flipped effection
-        }
+            }
         };break;
         case 3:            
-        { par[0].style= "grid-template-columns:auto auto auto auto auto auto";         
-        cardsClass=cardsSelect(game.level);   
-        cardLayout=6*6;
-        for (let j=0;j<cardLayout;j++) {
+        { 
+            document.getElementsByClassName("game-stats__level--value")[0].innerHTML=game.level;
+            par[0].style= "grid-template-columns:auto auto auto auto auto auto";         
+            cardsClass=cardsSelect(game.level);   
+            cardLayout=6*6;
+            for (let j=0;j<cardLayout;j++) {
             c[j]=document.createElement("div");
             c[j].innerHTML='<div class="card__face card__face--front"></div><div class="card__face card__face--back"></div>';
             par[0].appendChild(c[j]);        
             c[j].className=cardsClass[j%cardsClass.length];
             c[j].addEventListener("click",handleCard) //add flipped effection
-        }
+            }
         };break;
     
     }
 } 
-//点击end后保持状态，并且积分
-function CountScore() {
-    //remove instruction
-    // let par=document.getElementsByClassName("game-board");
-    // let chl=document.getElementsByClassName("game-instruction");
-    // par[0].removeChild(chl[0]);    
-    let cardsAll=document.getElementsByClassName("card");
-        // cardsAll.forEach(c => {c.classList.remove("card--flipped")})
-        for (let i=0;i<cardsAll.length;i++) {
-            unHandleCard(cardcardsAll[i])
-        }
-        return;
-        // cardsAll.forEach(c => {unHandleCard(c)});
-}
+//click end to stop game and display score
+// function stop() {
+//          const cards = document.getElementsByClassName("card");
+//          alert(cards);
+//         cards.forEach(c => {unHandleCard(c)            
+//         });
+        
+// }
 
 
 //cards pool generated
@@ -152,8 +146,26 @@ function handleCard() {
     if (game.preSelected) {
        if (game.preSelected.className===currentSelected.className) {
            unHandleCard(game.preSelected);
-           unHandleCard(currentSelected);
+           unHandleCard(currentSelected);           
            game.preSelected=null;
+           if (game.level===1)  {
+               game.matched+=1;
+               game.score+=game.level**2*game.timeLeft;
+               document.getElementsByClassName("game-stats__score--value")[0].innerHTML=game.score;
+               if (game.matched>1) {game.matched=0;game.level=2;changeLayout(game.level)}
+            } 
+            if (game.level===2)  {
+                game.matched+=1;
+                game.score+=game.level**2*game.timeLeft;
+                document.getElementsByClassName("game-stats__score--value")[0].innerHTML=game.score;
+                if (game.matched>8) {game.matched=0;game.level=3;changeLayout(game.level)}
+             }
+             if (game.level===3)  {
+                game.matched+=1;
+                game.score+=game.level**2*game.timeLeft;
+                document.getElementsByClassName("game-stats__score--value")[0].innerHTML=game.score;
+                if (game.matched>18) {game.matched=0;alert(`Congratulation your score is ${game.score}`)}
+             }        
            return;
         }
         // wrong cards
@@ -172,3 +184,22 @@ function handleCard() {
 function unHandleCard(card) {
     card.removeEventListener("click",handleCard)
 }
+//time control
+function timeControl() {
+    // game.timeLeft=60;
+    if (game.timeLeft>0) {
+        setTimeout(() => {
+            game.timeLeft-=1;
+            document.getElementsByClassName("game-timer__bar")[0].innerHTML=`${game.timeLeft}S`
+        }, 1000);
+    } else {
+        document.getElementsByClassName("game-stats__button")[0].innerHTML="New Game";
+        alert(`Congratulation your score is ${game.score}`);
+        let cards=document.getElementsByClassName("card");        
+        for (let a=0;a<cards.length;a++) {cards[a].removeEventListener("click",handleCard)}; 
+        game.level=0; 
+        game.timeLeft=60;       
+        game.start=false; 
+    }
+}
+
