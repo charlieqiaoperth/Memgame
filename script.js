@@ -49,9 +49,7 @@ function changeLayout(change) {
         par[0].removeChild(par[0].firstChild);//clear old card ,ready to new card layout
         }
         //change for different level
-    switch (change) {
-        // case 0: {par[0].style="background-color:rgba(0,0,255)";par[0].style="z-index:1";};break;     
-        // case 0:{alert (document.getElementsByClassName("card"))};break;//.forEach(c => {unHandleCard(c)});};break;
+    switch (change) {        
         case 1:            
         { 
             // while (par[0].firstChild) {par[0].removeChild(par[0].firstChild);};
@@ -63,9 +61,10 @@ function changeLayout(change) {
             c[j]=document.createElement("div");
             c[j].innerHTML='<div class="card__face card__face--front"></div><div class="card__face card__face--back"></div>';
             par[0].appendChild(c[j]);        
-            c[j].className=cardsClass[j%cardsClass.length];
+            c[j].className=cardsClass[j];
             c[j].addEventListener("click",handleCard) //add flipped effection
-            }            
+            }  
+            // cardsCss();   
         };break;
         case 2:            
         { 
@@ -77,7 +76,7 @@ function changeLayout(change) {
             c[j]=document.createElement("div");
             c[j].innerHTML='<div class="card__face card__face--front"></div><div class="card__face card__face--back"></div>';
             par[0].appendChild(c[j]);        
-            c[j].className=cardsClass[j%cardsClass.length];
+            c[j].className=cardsClass[j];
             c[j].addEventListener("click",handleCard) //add flipped effection
             }
         };break;
@@ -91,13 +90,22 @@ function changeLayout(change) {
             c[j]=document.createElement("div");
             c[j].innerHTML='<div class="card__face card__face--front"></div><div class="card__face card__face--back"></div>';
             par[0].appendChild(c[j]);        
-            c[j].className=cardsClass[j%cardsClass.length];
+            c[j].className=cardsClass[j];
             c[j].addEventListener("click",handleCard) //add flipped effection
             }
         };break;
     
     }
 } 
+// function cardsCss () {    
+//         for (let j=0;j<cardLayout;j++) {
+//             c[j]=document.createElement("div");
+//             c[j].innerHTML='<div class="card__face card__face--front"></div><div class="card__face card__face--back"></div>';
+//             par[0].appendChild(c[j]);        
+//             c[j].className=cardsClass[j];
+//             c[j].addEventListener("click",handleCard) //add flipped effection
+//         }
+// }
 //cards pool generated
 function cardsSelect(gameLevel) {
     let cardClass = "";
@@ -119,9 +127,14 @@ function cardsSelect(gameLevel) {
         }
       cardsPool.push(cardClass);
     }
+    //  cardsPool=cardsPool.concat(cardsPool);    
+     cardsPool=shuffleCards(cardsPool.concat(cardsPool));        
      return  cardsPool;
 }
-
+function shuffleCards(arr) {
+    arr.sort(() => Math.random() - 0.5);
+    return arr;
+}
 
 //****/part2:match card****
 
