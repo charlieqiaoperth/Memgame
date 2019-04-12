@@ -1,13 +1,13 @@
 // your logic here
-const game= {
-    haha:null,
+const game= {    
     level:0,
     score:0,
     preSelected:null,
     machingTime:false,
     start:false,
     timeLeft:10,
-    matched:0
+    matched:0,
+    barWidth:null
 }
 
          //****/part1:page layout****
@@ -98,16 +98,6 @@ function changeLayout(change) {
     
     }
 } 
-//click end to stop game and display score
-// function stop() {
-//          const cards = document.getElementsByClassName("card");
-//          alert(cards);
-//         cards.forEach(c => {unHandleCard(c)            
-//         });
-        
-// }
-
-
 //cards pool generated
 function cardsSelect(gameLevel) {
     let cardClass = "";
@@ -187,6 +177,7 @@ function handleCard() {
 function unHandleCard(card) {
     card.removeEventListener("click",handleCard)
 }
+            ///part3 time control
 //time control
 function timeControl() {
     // game.timeLeft=60;
@@ -202,9 +193,10 @@ function timeControl() {
         if (game.start) {
         setTimeout(() => {
             game.timeLeft--;            
-            document.getElementsByClassName("game-timer__bar")[0].innerHTML=`${game.timeLeft}S`;            
-            document.getElementsByClassName("game-timer__bar")[0].style.width="game.left+'%'";
-            timeControl()
+            document.getElementsByClassName("game-timer__bar")[0].innerHTML=`${game.timeLeft}S`;             
+            game.barWidth=Math.floor(100*game.timeLeft/60)+'%';                 
+            document.getElementsByClassName("game-timer__bar")[0].style.width=`${game.barWidth}`;
+            timeControl();
             }, 1000);
         }
     } 
