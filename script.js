@@ -31,7 +31,8 @@ function displayGame () {
         game.start=true;
         game.level=1;
         game.matched=0;
-        game.score=0; 
+        game.score=0;
+        document.getElementsByClassName("game-stats__score--value")[0].innerHTML=game.score; 
         game.timeLeft=60;                     
         changeLayout(game.level);
         timeControl();                   
