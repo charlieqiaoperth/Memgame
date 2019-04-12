@@ -32,7 +32,7 @@ function displayGame () {
         game.level=1;
         game.matched=0;
         game.score=0;
-        document.getElementsByClassName("game-stats__score--value")[0].innerHTML=game.score; 
+        document.getElementsByClassName("game-stats__score--value")[0].innerHTML=game.score; //refresh the score to 0
         game.timeLeft=60;                     
         changeLayout(game.level);
         timeControl();                   
